@@ -45,11 +45,11 @@ public class BookService {
         }
 
         // 4. 유저 정보를 가져온다
+        // 5. 유저 정보와 책 정보를 기반으로 UserLoanHistory를 저장한다.
         User user = userRepository.findByName(request.getUserName())
                 .orElseThrow(IllegalArgumentException::new);
+        user.loanBook(book.getName());
 
-        // 5. 유저 정보와 책 정보를 기반으로 UserLoanHistory를 저장한다.
-        userLoanHistoryRepository.save(new UserLoanHistory(user, book.getName()));
 
     }
 
@@ -58,9 +58,7 @@ public class BookService {
         User user = userRepository.findByName(request.getUserName())
                 .orElseThrow(IllegalArgumentException::new);
 
-        UserLoanHistory history = userLoanHistoryRepository.findByUserIdAndBookName(user.getId(), request.getBookName())
-                .orElseThrow(IllegalArgumentException::new);
-        history.doReturn();
+       user.returnBook(request.getBookName());
 
     }
 }
